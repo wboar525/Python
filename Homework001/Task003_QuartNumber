@@ -1,0 +1,11 @@
+num=int(input("Введите номер четверти: "))
+x = '>'
+y = '>'
+if num == 2 :
+    y = '<'
+elif num == 3 :
+    x = '<'
+    y = '<'
+elif num == 4 :
+    x = '<'
+print(f"{num} -> x {x} 0, y {y} 0")
