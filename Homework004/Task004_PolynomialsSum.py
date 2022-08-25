@@ -5,31 +5,53 @@
 
 import csv
 import re
+
+# Создадим два файла с многочленами
+poly1 = ["5x^2", "+", "3x"]
+poly2 = ["3x^2", "+", "x", "+", "8"]
+
+with open('poly1.csv', 'w+', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
+    writer.writerow(poly1)
+
+with open('poly2.csv', 'w+', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
+    writer.writerow(poly2)
+
+# теперь считаем многочлены из файлов
+with open('poly1.csv', 'r', newline='', encoding='utf-8') as file:
+    reader = csv.reader(file, delimiter=',')
+    poly1 = reader.__next__()
+
+with open('poly2.csv', 'r', newline='', encoding='utf-8') as file:
+    reader = csv.reader(file, delimiter=',')
+    poly2 = reader.__next__()
+
 # напишем функцию определения степени и множителя каждого элемента многочлена
 
 
 def findOrderAndRatio(poly):
+    # используем regexp для нахождения чисел по шаблону, итератор чтобы получить список чисел а не строк
     digits = [int(s) for s in re.findall(r'[-+]?\d+', poly)]
-#    print(digits)
     order = 0
     ratio = 0
     if len(digits) > 1:
         return digits[1], digits[0]
-    
-    isdegree = '^' in poly
-    isx = 'x' in poly
+
+    isdegree = '^' in poly  # есть ли в строке степень
+    isx = 'x' in poly  # есть ли в строке х
     if len(digits) == 1:
         if isdegree:
-            return digits[0],1
+            return digits[0], 1
         elif isx:
-            return 1,digits[0]
+            return 1, digits[0]
         else:
             return 0, digits[0]
     if len(digits) == 0:
         if isx:
-            return 1,1
+            return 1, 1
         else:
-            return 0,0
+            return 0, 0
     return order, ratio
 
 
@@ -56,27 +78,6 @@ def buildNewPoly(dict):
         newPoly.append(text)
     return newPoly
 
-
-# Создадим два файла с многочленами
-poly1 = ["5x^2", "+", "3x"]
-poly2 = ["3x^2", "+", "x", "+", "8"]
-
-with open('poly1.csv', 'w+', newline='', encoding='utf-8') as file:
-    writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
-    writer.writerow(poly1)
-
-with open('poly2.csv', 'w+', newline='', encoding='utf-8') as file:
-    writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
-    writer.writerow(poly2)
-
-# теперь считаем многочлены из файлов
-with open('poly1.csv', 'r', newline='', encoding='utf-8') as file:
-    reader = csv.reader(file, delimiter=',')
-    poly1 = reader.__next__()
-
-with open('poly2.csv', 'r', newline='', encoding='utf-8') as file:
-    reader = csv.reader(file, delimiter=',')
-    poly2 = reader.__next__()
 
 # переведем 1-й файл с многочленами в формат словаря, где ключ=степень:значение=множитель
 dict = {}
